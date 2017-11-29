@@ -151,7 +151,7 @@ def sockettest(bot, trigger):
 
 
 @commands('connectsocket', 'connect')
-@require_techrat('I am sorry, but this command is restricted for TechRats and above.')
+@require_permission(Permissions.techrat)
 @ratlib.sopel.filter_output
 def connectSocket(bot, trigger):
     """
@@ -204,9 +204,12 @@ def handleWSMessage(payload, senderinstance):
         data = response['data']
         if 'action' in response.keys():
             action = response['action'][0]
-        else:
+        elif 'meta' in response.keys():
             action = response['meta']['event']
-    except KeyError:
+        else:
+            data = data['attributes']
+            action = data['event']
+    except:
         print("[Websocket] Message: " + str(response))
         print("[Websocket] Couldn't get data or action - Ignoring Websocket Event.")
         return
