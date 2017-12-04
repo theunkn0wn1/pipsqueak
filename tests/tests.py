@@ -23,18 +23,26 @@ class RatlibNamesTests(unittest.TestCase):
 
     # @unittest.expectedFailure
     def test_require_decorator(self):
+        """
+        Test the api.names.require_role decorator
+        Verifies the role lockouts function as intended (via brute force checking)
+        :return:
+        """
         level = name.Permissions.rat
         for level in name.Permissions:
             with self.subTest(permission=level):
-
+                # define and decorate a test function
                 @name.require_permission(level)
                 def foo(bot, trigger):
-                    return 42
+                    return 42  # because failed conditions return 1 (thanks rate limiting!)
+                # define and reset the itterator, used during the loop over hostnames
                 i = 0
                 for host in name.privlevels:
-                    if i < level.value[0]:
+                    if i < level.value[0]:  # if the vhost does not have sufficient privilages
+                        # we know this function call will fail and not return the expected value
                         self.assertNotEqual(foo(mock.Bot(), mock.Trigger(host=host)), 42)  # ensure func is not callable
                     else:
+                        # the function call should suceed, and output the expected value
                         self.assertEqual(foo(mock.Bot(), mock.Trigger(host=host)), 42)  # ensure func is callable
                     i += 1
 
