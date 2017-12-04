@@ -20,7 +20,7 @@ from threading import Thread
 import json
 import time
 import traceback
-
+import websocket
 # Sopel imports
 from sopel.formatting import bold, color, colors
 from sopel.module import commands, NOLIMIT, priority, require_chanmsg, rule
@@ -63,6 +63,58 @@ def configure(config):
             "Web Socket Port"
         )
     )
+
+
+class Socket:
+    def __enter__(self):
+        return self._lock.__enter__()
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        return self._lock.__exit__(exc_type, exc_val, exc_tb)
+
+    def __init__(self):
+        self._lock = threading.RLock()
+        # print("Init for socket called!")
+
+
+class RatSocket(Thread):
+
+    def __init__(self, bot=None):
+        super().__init__()
+        self.socket = Socket()
+        self.connected = False
+        self.token = None
+        self.bot = bot
+
+    def _on_recv(self, socket, message):
+        print("got message: data is {}".format(message))
+
+    def _on_open(self, socket):
+        print("connection to API opened")
+        # Api.my_websocket = socket
+
+    def _on_error(self, socket, error):
+        print("some error occured!\n{}".format(error))
+
+    def _on_close(self, socket):
+        print("####\tsocket closed\t####")
+
+    def run(self):
+        print("thread started")
+        print("using {} as URL".format(self.url))
+        self.socket = websocket.WebSocketApp(url=self.url.format(token=self.api_token),
+                                             on_close=self._on_close,
+                                             on_error=self._on_error,
+                                             on_message=self._on_recv)
+        self.socket.on_open = self._on_open
+        print("running client....")
+        self.socket.run_forever()
+        print("Exiting thread...")
+
+    async def send_message(self, message):
+        # self.socket: ws_client.WebSocketApp
+        await self.socket.send(message)
+        # await self.socket.close()
 
 
 def shutdown(bot=None):
