@@ -15,6 +15,7 @@ import functools
 from sopel.module import NOLIMIT
 from enum import Enum
 
+
 class Permissions(Enum):
     recruit = (0, None)
     rat = (1, "Sorry, but you need to be a registered and drilled Rat with an identified IRC nickname to use "
@@ -30,6 +31,8 @@ urljoin = ratlib.api.http.urljoin
 savedratids = {}
 savedratnames = {}
 savedclientnames = {}
+
+
 def getRatId(bot, ratname, platform=None):
 
     if ratname in savedratids.keys():
@@ -41,7 +44,6 @@ def getRatId(bot, ratname, platform=None):
         elif (platform == element['platform']) and ((str(element['name']).lower()==str(ratname).lower()) or str(element['name']).lower()==str(strippedname).lower() or str(element['name']).lower()==str(strippedname.replace('_',' ')).lower()):
             # print('platform was on the gotten name and names matched. Returning '+str(element))
             return element
-
 
     try:
         uri = '/nicknames/' + ratname
@@ -65,8 +67,9 @@ def getRatId(bot, ratname, platform=None):
                 id = ratobject['id']
                 tempnam = ratobject['name']
                 tempplat = ratobject['platform']
-                if (str(tempnam).lower()==str(ratname).lower() or str(tempnam).lower()==str(strippedname).lower() or str(tempnam).lower()==str(strippedname.replace('_', ' ')).lower()):
-                    retlist.append({'id': id, 'name':tempnam , 'platform':tempplat})
+                if (str(tempnam).lower() == str(ratname).lower() or str(tempnam).lower() == str(strippedname).lower()
+                        or str(tempnam).lower() == str(strippedname.replace('_', ' ')).lower()):
+                    retlist.append({'id': id, 'name': tempnam, 'platform': tempplat})
             if len(retlist) == 0:
                 ratnam = tempnam
                 ratplat = tempplat

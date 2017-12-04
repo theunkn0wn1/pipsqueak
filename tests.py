@@ -1,4 +1,6 @@
 import unittest
+import ratlib.api.names
+
 """
 This is the Unit Test file for PipSqeak.
 Test Classes should be per-module
@@ -8,6 +10,17 @@ Test Classes should be per-module
 class RatBoardTests(unittest.TestCase):
     """
     tests for the rat-board module
+    """
+    def setUp(self):
+        pass
+
+    def tearDown(self):
+        pass
+
+
+class NamesTests(unittest.TestCase):
+    """
+    Tests for ratlib/api/names.py
     """
     def setUp(self):
         pass
