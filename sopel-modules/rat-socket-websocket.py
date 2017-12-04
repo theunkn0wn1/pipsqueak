@@ -1,6 +1,7 @@
 # coding: utf8
 """
 rat-socket-websocket.py - Fuel Rats Rat Tracker module.
+reimplemented against the `websocket` package
 
 Copyright (c) 2017 The Fuel Rats Mischief,
 All rights reserved.
@@ -29,26 +30,27 @@ import ratlib.sopel
 from sopel.config.types import StaticSection, ValidatedAttribute
 
 from ratlib.api.v2compatibility import convertV1RescueToV2, convertV2DataToV1
-
-log.startLogging(sys.stdout)
-defer.setDebugging(True)
-
+import threading
+import collections
 # ratlib imports
 import ratlib.api.http
 from ratlib.api.names import *
 
 urljoin = ratlib.api.http.urljoin
 
-import threading
-import collections
 
-
-## Start Config Section ##
+# # Start Config Section ##
 class SocketSection(StaticSection):
     websocketurl = ValidatedAttribute('websocketurl', str, default='1234')
     websocketport = ValidatedAttribute('websocketport', str, default='9000')
 
+
 def configure(config):
+    """
+    called during Sopel Configure
+    :param config:
+    :return:
+    """
     ratlib.sopel.configure(config)
     config.define_section('socket', SocketSection)
     config.socket.configure_setting(
@@ -65,6 +67,17 @@ def configure(config):
     )
 
 
+def setup(bot):
+    """
+    called during Sopel setup
+    :param bot: Sopel bot handle
+    :return:
+    """
+    ratlib.sopel.setup(bot)
+    bot.memory['ratbot']['log'] = (threading.Lock(), collections.OrderedDict())
+    bot.memory['ratbot']['socket'] = Socket()
+
+
 class Socket:
     def __enter__(self):
         return self._lock.__enter__()
@@ -78,30 +91,42 @@ class Socket:
 
 
 class RatSocket(Thread):
+    # define class var bot, for external usage
+    socket = None  # lets keep with the convention shall we?
+    started = False
+    # we are not yet connected
+    connected = False
 
-    def __init__(self, bot=None):
+    def __init__(self, bot=None, url="dev.api.fuelrats.com"):
+        # call the super
         super().__init__()
+        # setup the Socket lock
         self.socket = Socket()
-        self.connected = False
         self.token = None
+        self.url = url
         self.bot = bot
+        RatSocket.socket = self
 
     def _on_recv(self, socket, message):
         print("got message: data is {}".format(message))
 
     def _on_open(self, socket):
-        print("connection to API opened")
+        print("[Ratsocket] Connection to API established.")
         # Api.my_websocket = socket
 
     def _on_error(self, socket, error):
-        print("some error occured!\n{}".format(error))
+        print("[Ratsocket] some error occured!\n{}".format(error))
 
     def _on_close(self, socket):
-        print("####\tsocket closed\t####")
+        print("[Ratsocket] ####\tsocket closed\t####")
 
     def run(self):
-        print("thread started")
-        print("using {} as URL".format(self.url))
+        if RatSocket.started:
+            raise RuntimeError("[Rattracker] something tried spawning a sceond API instance!")
+        print("[Ratsocket] Thread started.")
+        # thread started.
+        RatSocket.started = True
+        print("[Ratsocket] using {} as connnection URL".format(self.url))
         self.socket = websocket.WebSocketApp(url=self.url.format(token=self.api_token),
                                              on_close=self._on_close,
                                              on_error=self._on_error,
