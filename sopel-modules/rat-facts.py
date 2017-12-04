@@ -250,7 +250,6 @@ def cmd_fact(bot, trigger, db=None):
     if command == 'import':
         return cmd_fact_import(bot, trigger)
 
-
     @require_permission(Permissions.overseer)
     def cmd_fact_edit(bot, trigger):
         if not option:

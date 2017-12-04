@@ -180,6 +180,7 @@ def getRatName(bot, ratid):
     # print('returning '+str(ret)+' as name for '+ratid)
     return ret
 
+
 def removeTags(string):
     """
        Removes tags that are used on irc; ex: Marenthyu[PC] becomes Marenthyu
@@ -193,8 +194,9 @@ def removeTags(string):
 
     return string[0:i]
 
+
 def callapi(bot, method, uri, triggernick=None, data=None, _fn=ratlib.api.http.call):
-    '''
+    """
     Calls the API with the gived method endpoint and data.
     :param bot: bot to pull config from and log error messages to irc
     :param method: GET PUT POST etc.
@@ -202,7 +204,7 @@ def callapi(bot, method, uri, triggernick=None, data=None, _fn=ratlib.api.http.c
     :param data: body for request
     :param _fn: http call function to use
     :return: the data dict the api call returned.
-    '''
+    """
     uri = urljoin(bot.config.ratbot.apiurl, uri)
     headers = {"Authorization": "Bearer " + bot.config.ratbot.apitoken}
     if triggernick is not None:
@@ -240,10 +242,12 @@ def require_permission(privilage:Permissions, message =''):
     """
     Requires the invoking user to have a specified privilege level
     :param privilage: Permission level
-    :param msg: (optional) overwrite message
+    :param message: (optional) overwrite message. If None no message will be displayed.
     :return:
     """
-    if message == '': message = privilage.value[1]
+    if message == '':
+        message = privilage.value[1]
+
     def actual_decorator(function):
         @functools.wraps(function)
         def guarded(bot, trigger, *args, **kwargs):
@@ -263,7 +267,8 @@ def require_permission(privilage:Permissions, message =''):
 
 privlevels = {'recruit.fuelrats.com':0, 'rat.fuelrats.com':1, 'dispatch.fuelrats.com':2, 'overseer.fuelrats.com':3, 'op.fuelrats.com':4, 'techrat.fuelrats.com':5, 'netadmin.fuelrats.com':6, 'admin.fuelrats.com':6}
 
-def getPrivLevel(trigger):
+
+def getPrivLevel(trigger)->int:
     if trigger.owner:
         return 9
     if trigger.admin:
