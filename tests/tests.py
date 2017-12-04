@@ -8,6 +8,13 @@ import ratlib.api.names as name
 """
 This is the Unit Test file for PipSqeak.
 Test Classes should be per-module
+
+Copyright (c) 2017 The Fuel Rats Mischief, 
+All rights reserved.
+
+Licensed under the BSD 3-Clause License.
+
+See LICENSE.md
 """
 
 
@@ -22,7 +29,7 @@ class RatlibNamesTests(unittest.TestCase):
         pass
 
     # @unittest.expectedFailure
-    def test_require_decorator(self):
+    def test_require_role_decorator(self):
         """
         Test the api.names.require_role decorator
         Verifies the role lockouts function as intended (via brute force checking)

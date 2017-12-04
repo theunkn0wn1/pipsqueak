@@ -1,6 +1,13 @@
 """
 Module containing mocked classes for Unit Testing
 Does nothing interesting on its own.
+
+Copyright (c) 2017 The Fuel Rats Mischief,
+All rights reserved.
+
+Licensed under the BSD 3-Clause License.
+
+See LICENSE.md
 """
 
 

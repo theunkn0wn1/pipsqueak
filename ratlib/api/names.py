@@ -232,6 +232,7 @@ def getClientName(bot, resId):
     savedclientnames.update({resId:ret})
     return ret
 
+
 def flushNames():
     savedratids.clear()
     savedratnames.clear()
