@@ -7,29 +7,6 @@ Test Classes should be per-module
 """
 
 
-class Bot:
-    """
-    Mock bot object
-    """
-    def say(self, *args, **kwargs)->None:
-        """
-        Dummy method
-        :param args:
-        :param kwargs:
-        :return:
-        """
-        pass
-
-    def reply(self, *args, **kwargs)->None:
-        """
-        Dummy method
-        :param args:
-        :param kwargs:
-        :return:
-        """
-        pass
-
-
 class RatlibNamesTests(unittest.TestCase):
     """
     Tests for ratlib.api.names
