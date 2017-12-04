@@ -65,22 +65,6 @@ class RatBoardTests(unittest.TestCase):
         pass
 
 
-class NamesTests(unittest.TestCase):
-    """
-    Tests for ratlib/api/names.py
-    """
-    @classmethod
-    def setUpClass(cls):
-        # init a mock object once for usage
-        cls.bot = Bot()
-
-    def setUp(self):
-        pass
-
-    def tearDown(self):
-        pass
-
-
 if __name__ == '__main__':  # this prevents script code from being executed on import. (bad!)
     unittest.main()
 

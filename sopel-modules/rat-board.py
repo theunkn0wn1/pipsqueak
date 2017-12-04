@@ -468,6 +468,7 @@ def refresh_cases(bot, rescue=None, force=False):
             if case:
                 board.remove(case)
 
+
 def updateBoardIndexes(bot):
     board = bot.memory['ratbot']['board']
 
@@ -476,8 +477,9 @@ def updateBoardIndexes(bot):
             if rescue.data is None:
                 rescue.data = {'boardIndex': rescue.boardindex}
             else:
-                rescue.data.update({'boardIndex' : rescue.boardindex})
+                rescue.data.update({'boardIndex': rescue.boardindex})
         save_case(bot, rescue, forceFull=True)
+
 
 @commands('reindex', 'updateindex', 'index', 'ri')
 @require_permission(Permissions.rat)
