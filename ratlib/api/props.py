@@ -112,6 +112,21 @@ class TrackedProperty:
         return self.remote_name in json
 
 
+class SystemNameProperty(TrackedProperty):
+    """
+    Property for System names.
+    """
+    def set(self, instance, value: str or None, dirty=True)->None:
+        """
+        Set the value of the system name
+        :param instance: Instance of property
+        :param value: string value, will be cast to upper case due to API 2.1 validation requirements
+        :param dirty: If True, adds this to the list of changed properties on the instance.
+        :return: None
+        """
+        super().set(instance, value if value else None, dirty)
+
+
 class DateTimeProperty(TrackedProperty):
     UTC = datetime.timezone.utc
 
