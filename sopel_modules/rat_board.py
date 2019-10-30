@@ -944,11 +944,11 @@ def cmd_list(bot, trigger, *remainder):
             offset += 1
     tmpStr = ''.join(tmp)
     plats = tmpStr.split(' ')
-    
+
     for x in plats:
         if x not in ['pc', 'ps', 'xb', '',  '-']:
             raise UsageError()
-    
+
     showpc = 'pc' in plats
     showps = 'ps' in plats
     showxb = 'xb' in plats
@@ -1556,6 +1556,12 @@ def ratmama_parse(bot, trigger, db):
         if not case.system:
             case.system = fields["system"]
         # using lower() as systems may be saved in different capitalisation than the client entered it
+
+        if not case.system or not case.platform or not case.client:
+            bot.say("Caution - above signal rejected as strictly invalid."
+                    " Dispatch: please inject manually.")
+            return  # rescue is strictly invalid, bail out
+
         if case.system.lower() != fields["system"].lower():
             bot.say("Caution - Reported and autodetected System do not match! Dispatch, check it is set to the correct one! (" + case.system + " vs " + fields["system"] + ")")
         case.codeRed = (fields["o2"] != "OK")
